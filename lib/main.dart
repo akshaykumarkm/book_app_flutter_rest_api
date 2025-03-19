@@ -1,3 +1,7 @@
+import 'package:book_app/view/screens/login/login_screen.dart';
+import 'package:book_app/view/screens/signup/signup_screen.dart';
+import 'package:book_app/view/screens/splash/splash_screen.dart';
+import 'package:book_app/view/themes/themes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,11 +14,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Book App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: Scaffold(),
+      theme: mainTheme,
+      initialRoute: "/splash",
+      routes: {
+        "/login": (context) => LoginScreen(),
+        "/signup": (context) => SignupScreen(),
+        "/splash": (context) => SplashScreen(),
+      },
     );
   }
 }
