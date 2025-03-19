@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 final ThemeData mainTheme = ThemeData(
+  textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.deepOrange)),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       textStyle: WidgetStatePropertyAll(

@@ -1,3 +1,5 @@
+import 'package:book_app/view/screens/book_details/book_details.dart';
+import 'package:book_app/view/screens/home/home_screen.dart';
 import 'package:book_app/view/screens/login/login_screen.dart';
 import 'package:book_app/view/screens/signup/signup_screen.dart';
 import 'package:book_app/view/screens/splash/splash_screen.dart';
@@ -17,11 +19,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Book App',
       theme: mainTheme,
-      initialRoute: "/splash",
+      initialRoute: "/",
       routes: {
+        "/splash": (context) => SplashScreen(),
+        "/": (context) => HomeScreen(),
+        "/book": (context) => BookDetails(),
         "/login": (context) => LoginScreen(),
         "/signup": (context) => SignupScreen(),
-        "/splash": (context) => SplashScreen(),
       },
     );
   }
