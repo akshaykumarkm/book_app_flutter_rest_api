@@ -1,10 +1,27 @@
+import 'package:book_app/controller/fns/checkLoggedIn.dart';
+import 'package:book_app/controller/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class BookDetails extends StatelessWidget {
-  const BookDetails({super.key});
+  const BookDetails({super.key, required this.book});
+  final Map<String, dynamic> book;
+
+  String formatDate(String isoDate) {
+    try {
+      DateTime dateTime = DateTime.parse(isoDate).toLocal();
+      return DateFormat("dd MMM yyyy, hh:mm a").format(dateTime);
+    } catch (e) {
+      print("Invalid date format: $e");
+      return "Invalid date";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    checkLoggedIn(context);
     return Scaffold(
       appBar: AppBar(foregroundColor: Colors.deepOrange),
       body: Padding(
@@ -16,7 +33,7 @@ class BookDetails extends StatelessWidget {
               flex: 1,
               child: Center(
                 child: Text(
-                  "Note Book",
+                  book["title"],
                   textAlign: TextAlign.center,
                   softWrap: true,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
@@ -25,51 +42,83 @@ class BookDetails extends StatelessWidget {
             ),
             Expanded(
               flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Author : Nicholas Sparks",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    "Total Pages : 230",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    "Published Date : 20-02-1996",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    "Language : English",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    "Publisher : H&C Books",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    "Book Added by : Prince",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    "Book Added on : 2022",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    "Last Updated on : 2025",
-                    softWrap: true,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange.withAlpha(40),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Author : ${book["author"]}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "Total Pages : ${book["pages"]}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "Published Date : ${formatDate(book["publishedDate"])}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "Language : ${book["language"]}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "Publisher : ${book["publisher"]}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "Book Added by : User Id ${book["userId"]}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "Book Added on : ${formatDate(book["createdAt"])}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "Last Updated on : ${formatDate(book["updatedAt"])}",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
