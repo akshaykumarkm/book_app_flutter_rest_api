@@ -1,10 +1,17 @@
+import 'package:book_app/controller/fns/checkLoggedIn.dart';
+import 'package:book_app/controller/providers/auth_provider.dart';
+import 'package:book_app/controller/providers/book_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final bookProvider = Provider.of<BookProvider>(context, listen: false);
+    checkLoggedIn(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -20,31 +27,58 @@ class HomeScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Welcome",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                Text(
-                  "Akshay Kumar",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                ),
-                Divider(color: Colors.deepOrange),
-                SizedBox(height: 30),
-                Text(
-                  "Browse All Books",
-                  style: TextStyle(
-                    color: Colors.deepOrange,
-                    fontWeight: FontWeight.bold,
+            child: FutureBuilder(
+              future: bookProvider.getBooks(),
+              builder:
+                  (context, snapshot) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Welcome",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              await authProvider.logOut(context);
+                            },
+                            icon: Icon(
+                              Icons.logout_outlined,
+                              color: Colors.deepOrange,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Divider(color: Colors.deepOrange),
+                      SizedBox(height: 30),
+                      Text(
+                        "Browse All Books",
+                        style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Consumer<BookProvider>(
+                        builder: (context, booksProv, child) {
+                          return ListView.builder(
+                            itemCount: booksProv.books.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final book = bookProvider.books[index];
+                              return HomeBookCardWidget(book: book);
+                            },
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 20),
-                HomeBookCardWidget(),
-                HomeBookCardWidget(),
-                HomeBookCardWidget(),
-              ],
             ),
           ),
         ),
@@ -55,7 +89,9 @@ class HomeScreen extends StatelessWidget {
           "Add New Book",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, "/book");
+        },
         elevation: 0,
         isExtended: true,
       ),
@@ -65,13 +101,15 @@ class HomeScreen extends StatelessWidget {
 }
 
 class HomeBookCardWidget extends StatelessWidget {
-  const HomeBookCardWidget({super.key});
+  const HomeBookCardWidget({super.key, this.book});
+
+  final dynamic book;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, "/book");
+        Navigator.pushNamed(context, "/book", arguments: book);
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
@@ -85,7 +123,7 @@ class HomeBookCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Note Book",
+              book["title"],
               softWrap: true,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -93,7 +131,7 @@ class HomeBookCardWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            Text("By Nicholas Sparks"),
+            Text("By ${book["author"]}"),
           ],
         ),
       ),

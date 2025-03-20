@@ -1,12 +1,17 @@
+import 'package:book_app/controller/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   Future<void> _initializeApp(BuildContext context) async {
+    final authProvider = AuthProvider();
+    await authProvider.getTkn();
     await Future.delayed(const Duration(seconds: 2));
     if (context.mounted) {
-      Navigator.pushReplacementNamed(context, "/login");
+      authProvider.token == null
+          ? Navigator.pushReplacementNamed(context, "/login")
+          : Navigator.pushReplacementNamed(context, "/");
     }
   }
 
