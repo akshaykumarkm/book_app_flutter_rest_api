@@ -4,6 +4,10 @@ import 'package:book_app/controller/providers/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+int getYearFromDate(String date) {
+  return DateTime.parse(date).year;
+}
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -67,16 +71,20 @@ class HomeScreen extends StatelessWidget {
                       SizedBox(height: 20),
                       Consumer<BookProvider>(
                         builder: (context, booksProv, child) {
-                          return ListView.builder(
-                            itemCount: booksProv.books.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final book = bookProvider.books[index];
-                              return HomeBookCardWidget(book: book);
-                            },
-                          );
+                          return bookProvider.books.isEmpty
+                              ? Center(child: Text("No Books added yet!"))
+                              : ListView.builder(
+                                itemCount: booksProv.books.length,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  final book = bookProvider.books[index];
+                                  return HomeBookCardWidget(book: book);
+                                },
+                              );
                         },
                       ),
+                      SizedBox(height: 50),
                     ],
                   ),
             ),
@@ -92,7 +100,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, "/add_book");
         },
-        elevation: 0,
+        elevation: 2,
         isExtended: true,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -123,7 +131,7 @@ class HomeBookCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              book["title"],
+              "${book["title"]} (${getYearFromDate(book["publishedDate"])})",
               softWrap: true,
               style: TextStyle(
                 fontWeight: FontWeight.bold,

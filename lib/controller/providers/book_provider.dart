@@ -116,7 +116,7 @@ class BookProvider extends ChangeNotifier {
   }
 
   Future<void> editBook(
-    int id,
+    String id,
     String title,
     String author,
     int pages,
@@ -137,7 +137,7 @@ class BookProvider extends ChangeNotifier {
     try {
       setLoading(true);
 
-      final res = await http.post(
+      final res = await http.put(
         Uri.parse(url),
         headers: {
           "Content-Type": "application/json",
@@ -177,7 +177,7 @@ class BookProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteBook(int id, BuildContext context) async {
+  Future<void> deleteBook(String id, BuildContext context) async {
     final String url =
         "https://book-management-backend-jydw.onrender.com/books/deletebooks/$id";
 
@@ -190,7 +190,7 @@ class BookProvider extends ChangeNotifier {
     try {
       setLoading(true);
 
-      final res = await http.post(
+      final res = await http.delete(
         Uri.parse(url),
         headers: {
           "Content-Type": "application/json",

@@ -1,5 +1,5 @@
 import 'package:book_app/controller/fns/checkLoggedIn.dart';
-import 'package:book_app/controller/providers/auth_provider.dart';
+import 'package:book_app/controller/providers/book_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +20,7 @@ class BookDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final bookProvider = Provider.of<BookProvider>(context);
     checkLoggedIn(context);
     return Scaffold(
       appBar: AppBar(foregroundColor: Colors.deepOrange),
@@ -126,24 +126,41 @@ class BookDetails extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.delete_outline_outlined,
-                      color: Colors.white,
+                  GestureDetector(
+                    onTap: () async {
+                      final confirmed = await showDeleteConfirmation(context);
+                      if (confirmed == true) {
+                        bookProvider.deleteBook(book["id"].toString(), context);
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.delete_outline_outlined,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                      shape: BoxShape.circle,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        "/edit_book",
+                        arguments: book,
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.edit_outlined, color: Colors.white),
                     ),
-                    child: Icon(Icons.edit_outlined, color: Colors.white),
                   ),
                 ],
               ),
@@ -153,4 +170,26 @@ class BookDetails extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<bool?> showDeleteConfirmation(BuildContext context) {
+  return showDialog<bool>(
+    context: context,
+    builder:
+        (context) => AlertDialog(
+          title: Text("Delete Confirmation"),
+          content: Text("Are you sure you want to delete this item?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text("Delete"),
+            ),
+          ],
+        ),
+  );
 }
