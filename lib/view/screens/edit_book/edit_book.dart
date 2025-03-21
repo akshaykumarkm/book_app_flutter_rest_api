@@ -4,25 +4,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class AddBookScreen extends StatelessWidget {
-  const AddBookScreen({super.key});
+class EditBook extends StatelessWidget {
+  const EditBook({super.key, required this.book});
+
+  final Map<String, dynamic> book;
 
   @override
   Widget build(BuildContext context) {
+    print(book);
     final dateProvider = context.read<DateProvider>();
     final bookProvider = Provider.of<BookProvider>(context);
 
-    final GlobalKey<FormState> addBookKey = GlobalKey<FormState>();
+    final page = book["pages"].toString();
 
-    final TextEditingController titleController = TextEditingController();
-    final TextEditingController authorController = TextEditingController();
-    final TextEditingController pagesController = TextEditingController();
-    final TextEditingController languageController = TextEditingController();
-    final TextEditingController publisherController = TextEditingController();
+    final GlobalKey<FormState> editBookKey = GlobalKey<FormState>();
+
+    final TextEditingController titleController = TextEditingController(
+      text: book["title"],
+    );
+    final TextEditingController authorController = TextEditingController(
+      text: book["author"],
+    );
+    final TextEditingController pagesController = TextEditingController(
+      text: page,
+    );
+    final TextEditingController languageController = TextEditingController(
+      text: book["language"],
+    );
+    final TextEditingController publisherController = TextEditingController(
+      text: book["publisher"],
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add New Book"),
+        title: Text("Edit Book"),
         foregroundColor: Colors.deepOrange,
       ),
       body: SafeArea(
@@ -43,7 +58,7 @@ class AddBookScreen extends StatelessWidget {
               Expanded(
                 flex: 10,
                 child: Form(
-                  key: addBookKey,
+                  key: editBookKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -124,7 +139,9 @@ class AddBookScreen extends StatelessWidget {
                               FocusScope.of(context).requestFocus(FocusNode());
                               DateTime? pickedDate = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
+                                initialDate: DateTime.parse(
+                                  book["publishedDate"],
+                                ),
                                 firstDate: DateTime(1800),
                                 lastDate: DateTime(2100),
                               );
@@ -146,8 +163,9 @@ class AddBookScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                if (addBookKey.currentState!.validate()) {
-                                  bookProvider.addBook(
+                                if (editBookKey.currentState!.validate()) {
+                                  bookProvider.editBook(
+                                    book["id"].toString(),
                                     titleController.text.trim(),
                                     authorController.text.trim(),
                                     int.parse(pagesController.text.trim()),
@@ -158,7 +176,7 @@ class AddBookScreen extends StatelessWidget {
                                   );
                                 }
                               },
-                              child: Text("Add Book"),
+                              child: Text("Edit Book"),
                             ),
                           ),
                     ],

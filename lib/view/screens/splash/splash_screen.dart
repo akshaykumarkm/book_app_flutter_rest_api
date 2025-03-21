@@ -7,7 +7,7 @@ class SplashScreen extends StatelessWidget {
   Future<void> _initializeApp(BuildContext context) async {
     final authProvider = AuthProvider();
     await authProvider.getTkn();
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 4));
     if (context.mounted) {
       authProvider.token == null
           ? Navigator.pushReplacementNamed(context, "/login")

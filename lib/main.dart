@@ -3,6 +3,7 @@ import 'package:book_app/controller/providers/book_provider.dart';
 import 'package:book_app/controller/providers/date_provider.dart';
 import 'package:book_app/view/screens/add_book/add_book.dart';
 import 'package:book_app/view/screens/book_details/book_details.dart';
+import 'package:book_app/view/screens/edit_book/edit_book.dart';
 import 'package:book_app/view/screens/home/home_screen.dart';
 import 'package:book_app/view/screens/login/login_screen.dart';
 import 'package:book_app/view/screens/signup/signup_screen.dart';
@@ -44,6 +45,13 @@ class MyApp extends StatelessWidget {
                 settings.arguments as Map<String, dynamic>;
             return MaterialPageRoute(
               builder: (context) => BookDetails(book: book),
+            );
+          }
+          if (settings.name == "/edit_book") {
+            final Map<String, dynamic> book =
+                settings.arguments as Map<String, dynamic>;
+            return MaterialPageRoute(
+              builder: (context) => EditBook(book: book),
             );
           }
           return null;
