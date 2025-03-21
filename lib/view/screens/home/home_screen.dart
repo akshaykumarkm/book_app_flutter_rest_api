@@ -90,7 +90,7 @@ class HomeScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         onPressed: () {
-          Navigator.pushNamed(context, "/book");
+          Navigator.pushNamed(context, "/add_book");
         },
         elevation: 0,
         isExtended: true,

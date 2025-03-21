@@ -1,5 +1,7 @@
 import 'package:book_app/controller/providers/auth_provider.dart';
 import 'package:book_app/controller/providers/book_provider.dart';
+import 'package:book_app/controller/providers/date_provider.dart';
+import 'package:book_app/view/screens/add_book/add_book.dart';
 import 'package:book_app/view/screens/book_details/book_details.dart';
 import 'package:book_app/view/screens/home/home_screen.dart';
 import 'package:book_app/view/screens/login/login_screen.dart';
@@ -22,16 +24,17 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => BookProvider()),
+        ChangeNotifierProvider(create: (context) => DateProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Book App',
         theme: mainTheme,
-        initialRoute: "/",
+        initialRoute: "/splash",
         routes: {
           "/splash": (context) => SplashScreen(),
           "/": (context) => HomeScreen(),
-          // "/book": (context) => BookDetails(),
+          "/add_book": (context) => AddBookScreen(),
           "/login": (context) => LoginScreen(),
           "/signup": (context) => SignupScreen(),
         },
